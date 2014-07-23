@@ -4,16 +4,16 @@ all: build
 
 .PHONY: build
 build:
-	raco pollen render
-	raco pollen render articles/
+	raco pollen render *.pm
+	raco pollen render articles/*.pm
 
 .PHONY: install
 install:
-	rsync -auvz --exclude-from excludes
+	rsync -auvz --exclude-from excludes . $(TARGET)
 
 .PHONY: deploy
 deploy: build install
 
 .PHONY: clean
 clean:
-	find . -name \*.html -exec rm '{}' \;
+	find . -perm /a+w -name \*.html -exec rm '{}' \;
