@@ -4,10 +4,7 @@ all: build
 
 .PHONY: build
 build:
-	raco pollen render
-	raco pollen render articles/
-	raco pollen render projects/
-	raco pollen render projects/*/
+	find . -name \*.pm -exec raco pollen render '{}' \;
 
 .PHONY: install
 install:

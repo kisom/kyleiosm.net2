@@ -5,12 +5,14 @@
 ◊p{Hello.}
 
 ◊p{I recently lost my original site, and instead of figuring out how
-far behind my remote Git repo is, ◊q|I've| decided to
+far behind my remote Git repo is, ◊q{I've} decided to
 ◊|oq|reboot◊|cq|. For now, this means there's no proper blog.}
 
 ◊p{I currently work at ◊link["https://cloudflare.com/"]{CloudFlare} as
 a systems engineer, where I mostly focus on security engineering
 (particularly the cryptographic components) for our system.}
+
+◊p{I'm slowly adding my ◊link["/projects/"]{projects} to the site.}
 
 ◊p{Some articles I've written:}
 
