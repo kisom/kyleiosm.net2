@@ -4,8 +4,10 @@ all: build
 
 .PHONY: build
 build:
-	raco pollen render *.pm
-	raco pollen render articles/*.pm
+	raco pollen render
+	raco pollen render articles/
+	raco pollen render projects/
+	raco pollen render projects/*/
 
 .PHONY: install
 install:
@@ -13,6 +15,10 @@ install:
 
 .PHONY: deploy
 deploy: build install
+
+.PHONY: serve
+serve:
+	raco pollen start
 
 .PHONY: clean
 clean:
