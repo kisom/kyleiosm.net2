@@ -1,0 +1,55 @@
+@font-face {
+  font-family: 'Alegreya';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Alegreya'), local('Alegreya-Regular'), url(../fonts/Alegreya-Regular.woff) format('woff');
+}
+@font-face {
+  font-family: 'Alegreya SC';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Alegreya SC'), local('AlegreyaSC-Regular'), url(../fonts/AlegreyaSC-Regular.woff) format('woff');
+}
+/*
+@font-face {
+  font-family: 'Habibi';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Habibi'), local('Habibi-Regular'), url(fonts/Habibi-Regular.woff) format('woff');
+}
+ */
+@font-face {
+  font-family: 'Fira Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Fire Mono'), local('FiraMono-Regular'), url(../fonts/FiraMono-Regular.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'SourceCode Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: local('SourceCode Pro'), local('SourceCodePro-Regular'), url(../fonts/scpro.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Ubuntu';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Ubuntu'), local('Ubuntu-Regular'), url(../fonts/ubuntu.woff) format('woff');
+}
+/*
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: regular;
+  font-weight: 400;
+  src: url('fonts/FiraSans.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: italic;
+  font-weight: 400;
+  src: url('fonts/FirasansItalic.woff') format('woff');
+}
+ */
