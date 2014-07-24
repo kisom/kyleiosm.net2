@@ -53,7 +53,10 @@ might look like this:}
 
 ◊p{Both applications have a storage key with the SRK as their
 parent. Each of these application storage keys has a pair of keys
-below it: one for signatures, and one for encryption.}
+below it: one for signatures, and one for encryption. More complex
+hierarchies are possible; maybe application 1 has multiple
+sub-applications that each get a storage key with binding and signing
+keys.}
 
 ◊p{Binding keys can actually serve two closely-related functions:
 ◊strong{binding} and ◊strong{sealing}. Binding is a straightforward
@@ -103,4 +106,27 @@ which is ◊code{00000000000000000000000000000001}.}
 ◊p{So, perhaps application 1's storage key has the UUID
 ◊code{f5100a2ebdc0e4656fd5a433c9f9fc0e}, the binding key has the UUID
 ◊code{38567a18460f6734e3898d7f42c365a8}, and the signature key has the
-UUID ◊code{c039f95dfab376f4c9e31bf5af1e4ada}.}
+UUID ◊code{c039f95dfab376f4c9e31bf5af1e4ada}. In order to use a key,
+it's parent must be loaded first. So, in order to use the binding key
+above, the SRK must be loaded first, followed by the application
+storage key ◊code{f5100a2ebdc0e4656fd5a433c9f9fc0e}, and finally the
+binding key ◊code{38567a18460f6734e3898d7f42c365a8}.}
+
+h3{Key Secrets}
+
+◊p{Of course, having any key immediately available without some means
+of explicit authorisation besides being on the machine is
+useful. Notably, there are two main secrets guarding the TPM: the
+◊q{"owner"} and SRK secrets (and by secrets, I mean passwords◊|md|the
+TCG calls them secrets, though). For applications where just
+possessing the machine is enough authorisation, there are two
+so-called ◊strong{well-known secrets}. It may also be the case that
+unlocking the SRK should grant access to all of the keys to a user; in
+this case, it makes sense to require an SRK secret but not require any
+secrets on subsequent keys. In order to any key on the TPM, the SRK
+must be loaded, so this still requires an unlock of the
+SRK. Alternatively, it might make sense instead for each application
+storage key to require a secret; once the application key is unlocked,
+the application has to pay less attention to the fact that signatures
+and decryption are done with different keys. This is where having
+threat and security models will essentially drive the choice here.}
