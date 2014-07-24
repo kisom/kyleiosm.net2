@@ -75,4 +75,32 @@ when the TPM powers up; a key that is used for booting, for example,
 might be stay in the TPM's memory through a powercycle, particularly
 if persistent storage will not be available at boot time.}
 
-◊p{}
+◊p{Looking back at our example system, how are the two different
+binding keys distinguished? All keys in the TPM are identified by what
+is termed a UUID. Technically, they are of the type ◊code{TSS_UUID},
+which are defined as}
+
+◊pre{
+typedef struct tdTSS_UUID 
+{
+    UINT32  ulTimeLow;
+    UINT16  usTimeMid;
+    UINT16  usTimeHigh;
+    BYTE    bClockSeqHigh;
+    BYTE    bClockSeqLow;
+    BYTE    rgbNode[6];
+} TSS_UUID;
+}
+
+◊p{It's helpful to know that a ◊code{BYTE} is a ◊code{typedef} for
+◊code{uint8_t} in Trousers. When I was working with applications using
+the TPM, I found it useful to treat UUIDs as ◊code{uint8_t uuid[16]}
+(where 16 is the size of a UUID; if you add up the sizes of the
+members of the ◊code{TSS_UUID}, you'll find they sum up to 16 bytes).
+There is only one pre-defined UUID, and that is ◊code{TSS_UUID_SRK},
+which is ◊code{00000000000000000000000000000001}.}
+
+◊p{So, perhaps application 1's storage key has the UUID
+◊code{f5100a2ebdc0e4656fd5a433c9f9fc0e}, the binding key has the UUID
+◊code{38567a18460f6734e3898d7f42c365a8}, and the signature key has the
+UUID ◊code{c039f95dfab376f4c9e31bf5af1e4ada}.}
