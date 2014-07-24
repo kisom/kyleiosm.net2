@@ -2,11 +2,12 @@
 
 ◊h2{Adventures in Trusted Computing}
 
-◊blockquote{◊|oq|YOU ARE AT WITT'S END. PASSAGES LEAD OFF IN
-◊strong{*NO*} DIRECTIONS.◊|cq|}
+◊blockquote{◊em{◊|oq|YOU ARE AT WITT'S END. PASSAGES LEAD OFF IN
+◊strong{*NO*} DIRECTIONS.◊|cq|}◊br{}-- Colossal Cave, if it had been
+implemented by the TCG}
 
-◊blockquote{◊|oq|IÄ! IÄ! CTHULHU FHTAGN! PH'NGLUI MGLW'NAFH CTHULHU R'LYEH
-WGAH'NAGL FHTAGN!◊|cq|}
+◊blockquote{◊em{◊|oq|IÄ! IÄ! CTHULHU FHTAGN! PH'NGLUI MGLW'NAFH CTHULHU R'LYEH
+WGAH'NAGL FHTAGN!◊|cq|}◊br{}-- ancient lore}
 
 ◊p{TPMs (Trusted Platform Modules) are maddening to work with; the
 documentation and source code are terrible, and companies that have
@@ -27,4 +28,28 @@ hair.}
   and what are they good for? Our tale begins, as most do, with some
   expository background to set the stage.}
 
+  ◊li{◊link["key_field_guide.html"]{Keys, the TPM, and You}: a field
+  guide to how the TSS organises key material.}
+
+  ◊li{Something witty about threat models.}
+
+  ◊li{Housekeeping with the TPM: getting set up on Ubuntu.}
+
+  ◊li{Connecting to the TPM with the TSPI}
+
+  ◊li{Key hierarchies with the TSPI}
+
+  ◊li{Encryption and decryption with the TSPI}
+
+  ◊li{Signatures and verification with the TSPI}
+
+  ◊li{PCRs and known-good states}
+
 }
+
+◊p{◊strong{Disclaimer}: As I said, documentation is hard to come
+by. What's presented here is my best understanding of the system so
+far. If I'm wrong, I would ◊strong{love} (seriously) to be made aware
+of where my understanding falls short. If you have documentation,
+comments, or really anything useful about the TPMs, I'd love to hear
+from you.}

@@ -25,9 +25,12 @@ to the system board.}}
 ◊p{TPMs can encrypt, decrypt, sign, verify, and provide a source of
 random bits to the host machine. When the TPM performs a cryptographic
 operation, the key doesn't leave the TPM. This is really the strength
-of the TPM. This sounds really great, so why aren't TPMs used for
-everything? I'm glad you asked. Here's a partial list of the TPM's
-limitations:}
+of the TPM. They also have special volatile memory locations called
+◊strong{Platform Configuration Registers}, which store a SHA-1 hash of
+the data that has been written to them. They basically provide a means
+for ensuring the TPM is in a known state. I know this all sounds
+really great, so why aren't TPMs used for everything? I'm glad you
+asked. Here's a partial list of the TPM's limitations:}
 
 ◊ul{
 
@@ -50,9 +53,77 @@ limitations:}
   won't be useful (it doesn't make sense to secure a 4096-bit key with
   a 2048-bit key).}
 
+  ◊li{The TPM specification does not provide for a real-time clock.}
+
 }
+
+◊p{The Trusted Computing Group (TCG) designed TPMs not to be a panacea
+for security problems, but to fit the requirements of a low-cost
+cryptoprocessor that could be integrated into the machines of a decade
+ago. The main goals of the TPM seems to be providing some measure of
+◊strong{remote attestation}◊|md|the ability for a remote system to
+cryptographically identify itself to some other machine◊|md|and
+◊strong{secure boot}; that being said, the TPM can also be used to
+encrypt data for a particular machine and to combine the large amount
+of storage available on disk with the keys in the TPM to create a much
+larger secure storage space than the TPM could provide on its
+own. When the TPM is used in concert with other security mechanisms
+(such as code signing, sandboxing, process confinement, and so forth),
+it's useful in building robust secure systems. Keep in mind that the
+TPM is designed as a ◊strong{low-cost} cryptoprocessor. There are only
+so many threats that it can defend against; if you're going up against
+a powerful, determined adversary (normally I'd use the example of a
+James Bond supervillain, but things are getting out of hand with
+certain governments, so let's go with that), it just won't be able to
+provide that level of security.}
+
+◊p{For example, on servers, the TPM is often a small PCB that plugs
+into a header. This might be epoxied, but at the end of the day, a
+skilled attacker can circumvent this. There are attacks that can be
+successfully carried out when the attacker has access to the system
+board and can get the system to reboot and authenticate. You get what
+you pay for.}
 
 ◊p{How can the TPM store multiple keys with limited memory? How does
 the system interact with the TPM? What keeps an attacker from
 accessing the TPM when it's unlocked? These are some of the questions
 that I tried to answer when I first got started.}
+
+◊p{The physical TPM is only the tip of the iceberg; as a low-cost
+processor, it's slow and not guaranteed to be multi-threaded. The TCG
+specification dictates that the TCG device driver layer (TDDL) is the
+operating system interface to the TPM. The specifications also dictate
+the existence of the user-space TCG core service d◊|ae|mon (TCSD),
+which ◊|oq|◊strong{should} be the only portal to the TPM device
+driver.◊|cq| This isn't a guarantee, and it's possible an attacker can
+work around this. The TCG service provider interface (TSPI) is the
+programming interface to the TCSD, and it's the part that most
+developers will end up interacting with. The software components are
+called the TCG Software Stack, or TSS. The TSS is supposed to provide
+a multi-threaded interface to the TPM and provide all the appropriate
+context handling for user-space applications to access the TPM. So
+there's the answer to the second question: the system interacts via
+the TSPI through the TCSD. Too many acronyms? We haven't yet even
+begun to acronym!}
+
+◊p{What about the first question? Well, the answer is that we can use
+a chain of keys (which I'll talk about in a future installment) to
+secure keys ◊strong{outside}, which the TPM will only decrypt and load
+inside the TPM. That is, they never exist decrypted outside of the
+TPM. However, this poses a problem: if the machine is PXE-booted,
+those keys may not be available at boot time (unless there is
+dedicated persistent storage).}
+
+◊p{Lastly, what protections are there to prevent an attacker on the
+box from gaining access to the TPM? The answer is ◊|oq|◊strong{not
+much}◊|cq|. There are the system protections I'll talk about in a
+future segment, but once the TPM is unlocked, anyone can (in theory)
+connect to it. In practice, it's not quite that easy, but
+again◊|md|this will be an article all its own.}
+
+◊p{To wrap up, the TPM is essentially a hardware RSA cryptoprocessor
+designed to correspond to a single system. Though not a solution in
+and of itself, it can be used as a building block in a fairly robust
+secure system◊|md|so long as the threat model is properly detailed.}
+
+◊p{◊small{Published: 2014-07-23◊br{}Last update: 2014-07-23}}

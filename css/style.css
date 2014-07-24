@@ -42,12 +42,13 @@ table {
 h1 {
     font-family: 'Alegreya SC', 'Baskerville'; 
     text-align: center;
-    color: #00A39B;
 }
 
 h2 {
     font-family: 'Alegreya SC', 'Baskerville'; 
     font-size: 22pt;
+    text-align: center;
+
 }
 
 h3 {
