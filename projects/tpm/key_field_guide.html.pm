@@ -15,10 +15,13 @@ where the keys fit into the system.}
   ◊li{◊strong{storage} keys are key encryption keys; they are used to
   ◊q{"wrap"} other keys.}
 
-  ◊li{◊strong{binding} keys are encryption keys.}
+  ◊li{◊strong{binding} keys are encryption keys. Their algorithm
+  (RSAES-OAEP or RSAES-PKCSV15) is set at key creation time and cannot
+  be changed later.}
 
   ◊li{◊strong{signature} keys are used for signing, but you figured
-  that out already, didn't you?}
+  that out already, didn't you? Like binding keys, their algorithm
+  type is set at key creation time and cannot be changed later.}
 
   ◊li{◊strong{identity} keys are a special (and complex) case of
   signature keys. I haven't done anything with these, opting instead
@@ -101,18 +104,19 @@ the TPM, I found it useful to treat UUIDs as ◊code{uint8_t uuid[16]}
 (where 16 is the size of a UUID; if you add up the sizes of the
 members of the ◊code{TSS_UUID}, you'll find they sum up to 16 bytes).
 There is only one pre-defined UUID, and that is ◊code{TSS_UUID_SRK},
-which is ◊code{00000000000000000000000000000001}.}
+which is ◊code{00000000-0000-0000-0000-000000000001}.}
 
 ◊p{So, perhaps application 1's storage key has the UUID
-◊code{f5100a2ebdc0e4656fd5a433c9f9fc0e}, the binding key has the UUID
-◊code{38567a18460f6734e3898d7f42c365a8}, and the signature key has the
-UUID ◊code{c039f95dfab376f4c9e31bf5af1e4ada}. In order to use a key,
-it's parent must be loaded first. So, in order to use the binding key
-above, the SRK must be loaded first, followed by the application
-storage key ◊code{f5100a2ebdc0e4656fd5a433c9f9fc0e}, and finally the
-binding key ◊code{38567a18460f6734e3898d7f42c365a8}.}
+◊code{f5100a2e-bdc0-e465-6fd5-a433c9f9fc0e}, the binding key has the
+UUID ◊code{38567a18-460f-6734-e389-8d7f42c365a8}, and the signature
+key has the UUID ◊code{c039f95d-fab3-76f4-c9e3-1bf5af1e4ada}. In order
+to use a key, it's parent must be loaded first. So, in order to use
+the binding key above, the SRK must be loaded first, followed by the
+application storage key ◊code{f5100a2e-bdc0-e465-6fd5-a433c9f9fc0e},
+and finally the binding key
+◊code{38567a18-460f-6734-e389-8d7f42c365a8}.}
 
-h3{Key Secrets}
+◊h3{Key Secrets}
 
 ◊p{Of course, having any key immediately available without some means
 of explicit authorisation besides being on the machine is
@@ -128,5 +132,7 @@ must be loaded, so this still requires an unlock of the
 SRK. Alternatively, it might make sense instead for each application
 storage key to require a secret; once the application key is unlocked,
 the application has to pay less attention to the fact that signatures
-and decryption are done with different keys. This is where having
-threat and security models will essentially drive the choice here.}
+and decryption are done with different keys. The threat and security
+models for the system will drive the choice here.}
+
+◊p{◊small{Published: 2014-07-24◊br{}Last update: 2014-07-24}}

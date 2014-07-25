@@ -53,3 +53,5 @@ far. If I'm wrong, I would ◊strong{love} (seriously) to be made aware
 of where my understanding falls short. If you have documentation,
 comments, or really anything useful about the TPMs, I'd love to hear
 from you.}
+
+◊p{◊small{Published: 2014-07-23◊br{}Last update: 2014-07-24}}

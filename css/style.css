@@ -89,5 +89,8 @@ pre {
 }
 
 a {
-    color: #04054D;
+    /*color: #04054D;*/
+    color: #111;
+    text-decoration-line: underline;
+    text-decoration-style: dashed;
 }
