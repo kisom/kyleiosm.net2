@@ -4,7 +4,11 @@
 ◊h3['style: "text-align: center;"]{a field guide to how the TSS organises key material}
 
 ◊p{In order to understand how the TPM works, it helps to understand
-where the keys fit into the system.}
+where the keys fit into the system. Recall also that the maximum
+guaranteed size of the SRK is 2048 bits; in every case where I've used
+a TPM, I've used exclusively 2048-bit keys throughout the system, and
+it may be safely assumed that the entire discussion here assumes
+2048-bit keys.}
 
 ◊h3{Key types}
 
@@ -135,4 +139,61 @@ the application has to pay less attention to the fact that signatures
 and decryption are done with different keys. The threat and security
 models for the system will drive the choice here.}
 
-◊p{◊small{Published: 2014-07-24◊br{}Last update: 2014-07-24}}
+◊p{In terms of the TCG's roles, if your TPM owner and user are the
+same entity, having a secret for the SRK and no secret on the keys
+(that is, to use the keys requires the SRK to be unlocked, but that's
+it), might make sense. If they're separate, it might be better to have
+the SRK use the SRK well-known secret and have each user's keys
+protected by a secret. Not all of the user keys need have secrets
+either; if a user is an automated (d◊|aelig|mon) account, perhaps its
+authentication is done via other means and having access to the
+persistent storage on disk is access enough.}
+
+◊h3{Binding}
+
+◊p{I said that binding was a straight-forward encryption operation,
+but it's not quite. In a later installment where I go more in depth on
+how to actually bind, I'll explain it further, but for now you should
+know that there is a five-byte header that's required (`0101000002`)
+for the plaintext.}
+
+◊h3{Key Storage}
+
+◊p{There are three places that keys can be stored:}
+
+◊ul{
+
+  ◊li{◊strong{NVRAM}: space here is rather limited, so only keys that
+  should be available when the other storage places are unavailable
+  should be here. It might also require some creativity in storing the
+  keys (perhaps only storing the key's private exponent)}
+
+  ◊li{◊strong{System persistent storage}: this uses the mass storage
+  available on the platform to store keys; on Ubuntu, this is
+  `/var/lib/tpm/system.data`. Keys here are available to all users of the
+  system.}
+
+  ◊li{◊strong{User persistent storage}: this also uses the mass
+  storage on the platform, but keys are only available to the user
+  that created them (and possible the platform administrator, as
+  well). On Ubuntu, these keys are stored in
+  `$HOME/.trousers/user.data`.}
+
+}
+
+◊p{It might seem that the persistent storage keys are actually
+migrateable: why not just copy the keys off disk and use them
+elsewhere? Recall that all keys exist in a hierarchy under the SRK;
+the SRK being a storage key means that keys stored under directly it
+are ◊strong{wrapped} (or encrypted) with the SRK. In our previous
+example, the binding is wrapped with its parent application storage
+key, which is then wrapped with the SRK (which is why the chain must
+be followed to load a key). As the SRK doesn't leave the TPM, these
+keys cannot be feasibly unwrapped on another machine without breaking
+RSA. There are migrateable keys that support being moved between
+machines, but I've always opted to generate such keys outside the TPM
+and secure them with a TPM key to avoid having to jump through any
+hoops and to maintain the expectation that TPM keys stay with the
+TPM.}
+
+◊p{◊small{Published: 2014-07-24◊br{}Last update: 2014-07-30}}
