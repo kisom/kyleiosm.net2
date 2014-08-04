@@ -127,17 +127,17 @@ of explicit authorisation besides being on the machine is
 useful. Notably, there are two main secrets guarding the TPM: the
 ◊q{"owner"} and SRK secrets (and by secrets, I mean passwords◊|md|the
 TCG calls them secrets, though). For applications where just
-possessing the machine is enough authorisation, there are two
-so-called ◊strong{well-known secrets}. It may also be the case that
-unlocking the SRK should grant access to all of the keys to a user; in
-this case, it makes sense to require an SRK secret but not require any
-secrets on subsequent keys. In order to any key on the TPM, the SRK
-must be loaded, so this still requires an unlock of the
-SRK. Alternatively, it might make sense instead for each application
-storage key to require a secret; once the application key is unlocked,
-the application has to pay less attention to the fact that signatures
-and decryption are done with different keys. The threat and security
-models for the system will drive the choice here.}
+possessing the machine is enough authorisation, there is a so-called
+◊strong{well-known secret} (which is 20 bytes of all zeroes). It may
+also be the case that unlocking the SRK should grant access to all of
+the keys to a user; in this case, it makes sense to require an SRK
+secret but not require any secrets on subsequent keys. In order to any
+key on the TPM, the SRK must be loaded, so this still requires an
+unlock of the SRK. Alternatively, it might make sense instead for each
+application storage key to require a secret; once the application key
+is unlocked, the application has to pay less attention to the fact
+that signatures and decryption are done with different keys. The
+threat and security models for the system will drive the choice here.}
 
 ◊p{In terms of the TCG's roles, if your TPM owner and user are the
 same entity, having a secret for the SRK and no secret on the keys
@@ -145,7 +145,7 @@ same entity, having a secret for the SRK and no secret on the keys
 it), might make sense. If they're separate, it might be better to have
 the SRK use the SRK well-known secret and have each user's keys
 protected by a secret. Not all of the user keys need have secrets
-either; if a user is an automated (d◊|aelig|mon) account, perhaps its
+either; if a user is an automated (d◊|ae|mon) account, perhaps its
 authentication is done via other means and having access to the
 persistent storage on disk is access enough.}
 
@@ -154,8 +154,8 @@ persistent storage on disk is access enough.}
 ◊p{I said that binding was a straight-forward encryption operation,
 but it's not quite. In a later installment where I go more in depth on
 how to actually bind, I'll explain it further, but for now you should
-know that there is a five-byte header that's required (`0101000002`)
-for the plaintext.}
+know that there is a five-byte header that's required
+(◊code{0101000002}) for the plaintext.}
 
 ◊h3{Key Storage}
 
@@ -170,14 +170,14 @@ for the plaintext.}
 
   ◊li{◊strong{System persistent storage}: this uses the mass storage
   available on the platform to store keys; on Ubuntu, this is
-  `/var/lib/tpm/system.data`. Keys here are available to all users of the
-  system.}
+  ◊code{/var/lib/tpm/system.data}. Keys here are available to all
+  users of the system.}
 
   ◊li{◊strong{User persistent storage}: this also uses the mass
   storage on the platform, but keys are only available to the user
   that created them (and possible the platform administrator, as
   well). On Ubuntu, these keys are stored in
-  `$HOME/.trousers/user.data`.}
+  ◊code{$HOME/.trousers/user.data}.}
 
 }
 
@@ -196,4 +196,27 @@ and secure them with a TPM key to avoid having to jump through any
 hoops and to maintain the expectation that TPM keys stay with the
 TPM.}
 
-◊p{◊small{Published: 2014-07-24◊br{}Last update: 2014-07-30}}
+◊h3{The endorsement key}
+
+◊p{I haven't mentioned the ◊strong{endorsement key} (EK) yet. This key
+falls outside the key hierarchy, and has a different purpose than the
+keys under the SRK.}
+
+◊p{Generally, an endorsement key is generated in the TPM by the
+manufacturer. It used to ◊strong{endorse} other keys to prove that
+they came from a TPM. If the manufacturer's EK is used, it should come
+with a certificate from the manufacturer proving its veracity. Without
+a manufacturer certificate, it is impossible to prove the key actually
+came from a TPM, except perhaps in the case of centrally-managed
+TPMs. If all the TPMs belong to a central organisation, and if, on
+provisioning, the TPM sends out its endorsement key, there is a
+measure of trust to be had in the key using this centralised PKI. This
+just shifts the burden of PKI from the manufacturer to the
+organisation, and shouldn't be considered lightly.}
+
+◊p{◊small{Published: 2014-07-24◊br{}Last update: 2014-08-03}}
+
+◊p{◊small{Up next: ◊link["know_your_enemy.html"]{Know your enemy}:
+threat modeling with the TPM.}}
+
+◊p{◊small{◊link["index.html"]{Adventures in Trusted Computing}}}

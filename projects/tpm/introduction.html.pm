@@ -163,7 +163,7 @@ and can be tied to a specific TPM state.}
 rabbit hole; the state is based entirely on the value of one or more
 PCRs. A PCR can store 20 bytes of data and can only be
 ◊strong{extended}, the operation in which data is written to the
-register: data has the current PCR value appended, and the SHA-1
+register: the data is appended to the current PCR value, and the SHA-1
 digest is taken of this. When an operation expects a PCR to be in a
 known state, it means that PCR has been extended with known data in a
 set order of operations. This is used, for example, with trusted boot
@@ -176,6 +176,22 @@ talk about in a future segment, but once the TPM is unlocked, anyone
 can (in theory) connect to it. In practice, it's not quite that easy,
 but again◊|md|this will be an article all its own.}
 
+◊p{One feature that TPMs do provide, which is leveraged in Adam
+Langley's
+◊link["https://pond.imperialviolet.org/"]{Pond messaging system}, is
+actually erasable storage. Without going into the subject of digital
+forensics, it turns out securely erasing data on modern data storage
+devices (hard drives, including SSDs, removeable storage like USB
+drives, etc...) is virtually impossible to guarantee. The TPM's NVRAM
+(which does have a limited number of writes, in the neighbourhood of
+10,000) does provide such a storage space. To address the limited
+number of available writes to the NVRAM, Pond updates the NVRAM at
+most once per day. Usage of the NVRAM is the subject of a later
+installment; I'll describe the NVRAM in more depth there. One thing to
+keep in mind, though, is the very limited storage space available
+here; on my Thinkpads, there are 1280 ◊strong{bytes} available, split
+into separate areas with the largest being 1123 bytes.}
+
 ◊p{Finally, I'll close out this introduction with this: for the most
 part, you'll be hard-pressed to find examples on using the TPM in the
 real world. It seems most places that use them don't talk about it, so
@@ -183,4 +199,9 @@ while the TPM provides some tangible security benefits, as of now
 it'll mostly be up to you to build the infrastructure and applications
 to make use of it.}
 
-◊p{◊small{Published: 2014-07-23◊br{}Last update: 2014-07-30}}
+◊p{◊small{Published: 2014-07-23◊br{}Last update: 2014-08-03}}
+
+◊p{◊small{Up next: ◊link["key_field_guide.html"]{Keys, the TPM, and You}:
+a field guide to how the TSS organises key material.}}
+
+◊p{◊small{Back to ◊link["index.html"]{Adventures in Trusted Computing}}}
