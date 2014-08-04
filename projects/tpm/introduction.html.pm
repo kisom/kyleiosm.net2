@@ -113,7 +113,7 @@ bring:}
   of the platform}
 
   ◊li{◊strong{Public}: entities that can perform some operation on the
-  platform's operating syste, file system, data, ◊|etc| without
+  platform's operating system, file system, data, ◊|etc| without
   authentication or identity}
 
 }

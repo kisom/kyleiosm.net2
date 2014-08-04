@@ -1,7 +1,7 @@
 #lang pollen
 
 ◊h2{Keys, the TPM, and You}
-◊h3['style: "text-align: center;"]{a field guide to how the TSS organises key material}
+◊h3['style: "text-align: center;"]{A field guide to how the TSS organises key material}
 
 ◊p{In order to understand how the TPM works, it helps to understand
 where the keys fit into the system. Recall also that the maximum
@@ -73,7 +73,7 @@ state of the system; sealing ties the ciphertext to a PCR state so
 that the plaintext can only be decrypted when the TPM is a known
 state.}
 
-◊h3{Keys and Memory}
+◊h3{Keys and memory}
 
 ◊p{There are different kinds of storage memory that a key can live in,
 as well. First, there is the distinction between ◊strong{migrateable}
@@ -120,7 +120,7 @@ application storage key ◊code{f5100a2e-bdc0-e465-6fd5-a433c9f9fc0e},
 and finally the binding key
 ◊code{38567a18-460f-6734-e389-8d7f42c365a8}.}
 
-◊h3{Key Secrets}
+◊h3{Key secrets}
 
 ◊p{Of course, having any key immediately available without some means
 of explicit authorisation besides being on the machine is
@@ -157,7 +157,7 @@ how to actually bind, I'll explain it further, but for now you should
 know that there is a five-byte header that's required
 (◊code{0101000002}) for the plaintext.}
 
-◊h3{Key Storage}
+◊h3{Key storage}
 
 ◊p{There are three places that keys can be stored:}
 
