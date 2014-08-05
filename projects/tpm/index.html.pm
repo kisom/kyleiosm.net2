@@ -15,7 +15,7 @@ incorporated TPMs generally don't talk about it. There is next-to-no
 documentation for what's expected in many cases, and a lot of times I
 worked out how to proceed using trial-and-error. I set out to
 integrate TPMs into our systems, armed with only a copy of
-◊link["www.amazon.com/dp/0132398427/"]{A Practical Guide to Trusted Computing},
+◊link["http://www.amazon.com/dp/0132398427/"]{A Practical Guide to Trusted Computing},
 the ◊link["http://trousers.sourceforge.net/"]{Trousers} source code,
 and ◊link["http://cscope.sourceforge.net/"]{cscope}, and slowly began
 to work out how to use them. In this series, I'd like to share what
@@ -48,8 +48,8 @@ keys are organised, threat models, and getting set up to use the TPM.}
 ◊h3{TPM development}
 
 ◊p{The following sections go more in depth on developing with TPM, and
-are illustrated with C. The discussion also further in depth on
-various topics than the overview.}
+are illustrated with C. The discussion also goes further in depth on
+various topics than the overview sections.}
 
 ◊ul{
 

@@ -8,19 +8,22 @@ and conduct other nefarious triangular business. As such, I duly
 disabled them in my BIOS and moved on with my life.}
 
 ◊p{It turns out that TPMs aren't quite that. A TPM is essentially a
-smart card that is connected to the LPC (low pin count) bus on a
-motherboard, making it available at boot time. As part of the system
-board, is designed to be always-present, unlike a smart card (which is
-designed to be moved between systems). Just as a smart card is
-designed to perform cryptographic operations for a person, the TPM
-fills a similar role for the server.}
+cryptographic smartcard that is connected to the LPC (low pin count)
+bus on a motherboard, making it available at boot time. As part of the
+system board, is designed to be always-present, unlike a smartcard
+(which is designed to be moved between systems). Just as a smartcard
+is designed to perform cryptographic operations for a person, the TPM
+fills a similar role for the server, although the TPM's focus is on
+platform integrity.}
 
 ◊p{One common misconception I've heard about TPMs is that they're a
 secure key storage system; while they can store keys, this sells short
-what they're capable of. Here's the one-liner:}
+what they're capable of, and isn't really what they were designed
+for. Here's the one-liner:}
 
 ◊p{◊em{A TPM is a hardware RSA cryptoprocessor (with an RNG) attached
-to the system board.}}
+to the system board with the ability to provide a measure of
+integrity.}}
 
 ◊p{TPMs can encrypt, decrypt, sign, verify, and provide a source of
 random bits to the host machine. When the TPM performs a cryptographic
@@ -43,9 +46,9 @@ you asked. Here's a partial list of the TPM's limitations:}
 
   ◊li{A TPM has limited onboard key storage. If you need keys
   available at boot time (or don't have persistant storage for the
-  keys, à la PXE boot), you're out of luck. (Persistant storage? I
-  thought the TPM stored the keys in hardware? Hang on◊|md|we're
-  getting to that.)}
+  keys, à la PXE boot), you're out of luck if the keys won't fit in
+  NVRAM. (Persistant storage? I thought the TPM stored the keys in
+  hardware? Hang on◊|md|we're getting to that.)}
 
   ◊li{The largest key size a TPM is required to support according to
   the specs is 2048 bits. This is fine in most cases, but there might
@@ -60,8 +63,8 @@ you asked. Here's a partial list of the TPM's limitations:}
 ◊p{The TPM specification was written by the ◊strong{Trusted Computing
 Group} (TCG). What were their goals when designing the TPM? Why did
 they make them so limited? The primary design goal was to provide
-smartcard-like capabilities in a hardware package that would be
-affordable, and would fit the majority of users' security
+cryptographic smartcard-like capabilities in a hardware package that
+would be affordable, and would fit the majority of users' security
 requirements. For reference, when I looked on a couple of online
 stores, a TPM retailed for less than 20 USD◊|md|between 16 and 19 USD,
 actually. There are attacks that can be done on a TPM if an attacker
