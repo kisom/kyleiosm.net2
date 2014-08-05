@@ -70,6 +70,8 @@ various topics than the overview sections.}
 
 }
 
+There is also a ◊link["glossary.html"]{glossary} available.
+
 ◊p{◊strong{Disclaimer}: Documentation on the subject is hard to come
 by. What's presented here is my best understanding of the system so
 far. If I'm wrong, I would ◊strong{love} (seriously) to be made aware
