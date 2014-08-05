@@ -41,7 +41,7 @@ permits connecting to remote instances, but that's not a situation
 I've run into, nor a scenario that I'd like to be involved with. The
 code here will reflect this.}
 
-◊p{◊small{Published: 2014-08-03◊br{}Last update: 2014-08-03}}
+◊p{◊small{Published: 2014-08-03◊br{}Last update: 2014-08-04}}
 
 ◊p{◊small{Up next: ◊link["connecting.html"]{Setting up a TPM connection}}}
 

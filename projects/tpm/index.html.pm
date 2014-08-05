@@ -56,7 +56,7 @@ various topics than the overview.}
   ◊li{◊link["tspi_life.html"]{TSPI life}: an introduction to writing
   applications with the TSPI}
 
-  ◊li{Connecting to the TPM with the TSPI}
+  ◊li{◊link["connecting.html"]{Connecting to the TPM with the TSPI}}
 
   ◊li{Key hierarchies with the TSPI}
 

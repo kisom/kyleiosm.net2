@@ -175,26 +175,206 @@ allocated for this context.}
 
 ◊h3{Abstracting into a library}
 
-◊p{I wanted to coalesce this into an actual library. As will be
-obvious later, the context and TPM objects will be frequently used. It
-would also be nice to delineate the TPM-specific code into a separate
-package, such that the parent program doesn't have to worry about all
-the TPM-specific parts. This will become a layer over the TSPI, but
-the added simplicity will be worthwhile. It's worth noting that the
-library presented here is a little different from the library I
+I wanted to coalesce this into an actual library. As will be obvious
+later, the context and TPM objects will be frequently used. It would
+also be nice to delineate the TPM-specific code into a separate
+package, such that the parent program doesn't have to worry about
+all the TPM-specific parts. This will become a layer over the TSPI,
+but the added simplicity will be worthwhile. It's worth noting that
+the library presented here is a little different from the library I
 actually use (which does things specific to the task at hand and has
-an opaque TPM object).}
+an opaque TPM object).
 
-◊p{To start, I decided to create a structure to hold the context, the
-TPM object, and the result of the last TPM operation. The last field
-isn't strictly required in this version of the library, but I included
-it to facilitate making the object opaque later, should that be
-desired.}
+To start, I decided to create a structure to hold the context, the TPM
+object, and the result of the last TPM operation. The last field isn't
+strictly required in this version of the library, but I included it
+to facilitate making the object opaque later, should that be desired.
 
 ◊pre{
 typedef struct sTPM {
-	TSS_HCONTEXT	ctx;	// The context for the current connection.
-	TSS_HTPM	hdl;	// The TPM object for the current context.
-	TSS_RESULT	res;	// The result from the last TPM operation.
+	TSS_HCONTEXT	ctx; // The context for the current connection.
+	TSS_HTPM	hdl; // The TPM object for the current context.
+	TSS_RESULT	res; // The result from the last TPM operation.
 } * TPM;
 }
+
+Of course, this should go into a header file, which we'll set up
+with the following functions first:
+
+◊pre{
+/*
+ * Copyright (c) 2014 by Kyle Isom <kyle@tyrfingr.is>.
+ *
+ * Permission to use, copy, modify, and distribute this software for
+ * any purpose with or without fee is hereby granted, provided that
+ * the above copyright notice and this permission notice appear in
+ * all copies.
+
+ * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM
+ * DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ * ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
+ * SHALL INTERNET SOFTWARE CONSORTIUM BE LIABLE FOR ANY SPECIAL,
+ * DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
+ * RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
+ * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+ * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
+
+#ifndef __LIBTPM_TPM_H
+#define __LIBTPM_TPM_H
+
+
+typedef struct sTPM {
+	TSS_HCONTEXT	ctx; // The context for the current connection.
+	TSS_HTPM	hdl; // The TPM object for the current context.
+	TSS_RESULT	res; // The result from the last TPM operation.
+} * TPM;
+
+
+TPM		 tpm_connect(void);
+void		 tpm_close(TPM *);
+const char	*tpm_strerror(TPM);
+
+
+#endif
+}
+
+◊p['style: "text-align: center;"]{◊small{tpm/tpm.h}}
+
+◊pre{
+/*
+ * Copyright (c) 2014 by Kyle Isom <kyle@tyrfingr.is>.
+ *
+ * Permission to use, copy, modify, and distribute this software for
+ * any purpose with or without fee is hereby granted, provided that
+ * the above copyright notice and this permission notice appear in
+ * all copies.
+
+ * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM
+ * DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ * ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
+ * SHALL INTERNET SOFTWARE CONSORTIUM BE LIABLE FOR ANY SPECIAL,
+ * DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
+ * RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
+ * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+ * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
+
+#include <err.h>
+#include <string.h>
+#include <trousers/tss.h>
+#include <trousers/trousers.h>
+
+
+struct sTPM {
+	TSS_HCONTEXT	ctx; // The context for the current connection.
+	TSS_HTPM	hdl; // The TPM object for the current context.
+	TSS_RESULT	res; // The result from the last TPM operation.
+};
+
+#include <tpm/tpm.h>
+
+
+#define TPM_UUID_LENGTH		16
+
+
+const char	*TPM_NOT_INITIALISED = "TPM context is not initialised";
+
+
+/*
+ * tpm_connect establishes a new connection to the TPM.
+ */
+TPM
+tpm_connect()
+{
+	TPM	tpm = NULL;
+
+	if (NULL == (tpm = malloc(sizeof(struct sTPM)))) {
+		return NULL;
+	}
+
+	tpm->res = Tspi_Context_Create(&(tpm->ctx));
+	if (TSS_SUCCESS != tpm->res) {
+		goto exit;
+	}
+
+	tpm->res = Tspi_Context_Connect(tpm->ctx, NULL);
+	if (TSS_SUCCESS != tpm->res) {
+		goto exit;
+	}
+
+	tpm->res = Tspi_Context_GetTpmObject(tpm->ctx, &(tpm->hdl));
+	if (TSS_SUCCESS != tpm->res) {
+		goto exit;
+	}
+exit:
+	if (TSS_SUCCESS != tpm->res) {
+		free(tpm);
+		tpm = NULL;
+	}
+	return tpm;
+}
+
+
+/*
+ * tpm_close closes down the TPM connection, freeing all resources
+ * allocated to the current context.
+ */
+void
+tpm_close(TPM *tpm)
+{
+	TPM	temp = NULL;
+
+	if (NULL == tpm) {
+		return;
+	} else if (NULL == *tpm) {
+		return;
+	}
+
+	temp = *tpm;
+
+	temp->res = Tspi_Context_FreeMemory(temp->ctx, NULL);
+	if (TSS_SUCCESS != temp->res) {
+		warnx("failed to free TCS context memory: %s",
+		    Trspi_Error_String(temp->res));
+	}
+
+	temp->res = Tspi_Context_Close(temp->ctx);
+	if (TSS_SUCCESS != temp->res) {
+		warnx("failed to close TCS context: %s",
+		    Trspi_Error_String(temp->res));
+	}
+
+	free(*tpm);
+	*tpm = NULL;
+	temp = NULL;
+}
+
+
+/*
+ * tpm_strerror returns a string representation of the last error
+ * code from the TPM.
+ */
+const char *
+tpm_strerror(TPM tpm)
+{
+	if (NULL == tpm) {
+		return TPM_NOT_INITIALISED;
+	}
+
+	return Trspi_Error_String(tpm->res);
+}
+}
+◊p['style: "text-align: center;"]{◊small{libtpm.c}}
+
+I'll build on this library in future chapters, but this is a solid
+foundation to build on.
+
+◊p{◊small{Published: 2014-08-03◊br{}Last update: 2014-08-05}}
+
+◊;p{◊small{Up next: ◊link["connecting.html"]{Setting up a TPM connection}}}
+
+◊p{◊small{◊link["index.html"]{Adventures in Trusted Computing}}}
+
