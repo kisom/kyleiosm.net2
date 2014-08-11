@@ -1,6 +1,6 @@
 #lang pollen
 
-◊h2{POC||GTFO}
+◊h2{PoC||GTFO}
 
 ◊h3{Самиздат}
 
