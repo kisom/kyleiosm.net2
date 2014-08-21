@@ -19,6 +19,8 @@ a systems engineer, where I mostly focus on security engineering
 ◊ul{
   
   ◊li{◊link["/articles/system_structures.html"]{System Structures}}
+
+  ◊li{◊link["/articles/ssh_keys.html"]{SSH Keys: A Walkthrough}}
 }
 
 ◊p{Links:}
