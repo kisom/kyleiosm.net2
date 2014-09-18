@@ -20,3 +20,4 @@
 (define oq   'ldquo)
 (define cq   'rdquo)
 (define amp  'amp)
+(define AE   'AElig)

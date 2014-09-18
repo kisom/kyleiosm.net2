@@ -17,6 +17,8 @@
 (define nbsp 'nbsp)
 (define etc  'hellip)
 (define ae   'aelig)
+(define AE   'AElig)
 (define oq   'ldquo)
 (define cq   'rdquo)
 (define amp  'amp)
+

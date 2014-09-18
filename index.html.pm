@@ -23,6 +23,9 @@ a systems engineer, where I mostly focus on security engineering
   ◊li{◊link["/articles/ssh_keys.html"]{SSH Keys: A Walkthrough}}
 }
 
+◊p{I'm trying to ◊link["/owc/"]{read as many of the Oxford World's Classics}
+as I can, starting with Virgil's ◊em{◊|AE|nid}.}
+
 ◊p{Links:}
 
 ◊ul{
