@@ -24,11 +24,13 @@ a systems engineer, where I mostly focus on security engineering
 }
 
 ◊p{I'm trying to ◊link["/owc/"]{read as many of the Oxford World's Classics}
-as I can, starting with Virgil's ◊em{◊|AE|nid}.}
+as I can, starting with Virgil's ◊em{◊|AE|neid}.}
 
 ◊p{Links:}
 
 ◊ul{
+
+  ◊li{◊link["https://ello.co/kisom/"]{Ello profile}}
 
   ◊li{◊link["https://github.com/kisom/"]{GitHub}}
 

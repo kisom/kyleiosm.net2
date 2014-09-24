@@ -9,7 +9,7 @@ recently discovered the
 I've set about trying to read through some of these books. There's
 quite a few I've read before but would love to read again, and even
 more I've never read. The first batch of six books showed up. I
-started with Virgil's ◊em{◊|AE|nid}, and tentatively I'll be reading
+started with Virgil's ◊em{◊|AE|neid}, and tentatively I'll be reading
 the following books in order:}
 
 ◊ol{
