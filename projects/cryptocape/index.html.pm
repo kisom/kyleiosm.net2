@@ -8,7 +8,7 @@ Black. It provides an intersection for my interests in trusted
 computing, embedded systems, and cryptography.}
 
 ◊p{◊link["setup.html"]{Setting up the CryptoCape}.}
-◊p{Using the CryptoCape/BBB as an ◊link["entropy.html"]{entropy service}.}
+◊;p{Using the CryptoCape/BBB as an ◊link["entropy.html"]{entropy service}.}
 
 ◊p{
 ◊center{
