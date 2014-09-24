@@ -42,3 +42,11 @@ them, which may be more interesting than curating a path myself.}
 
 ◊p{As I (hopefully) finish books, I'll keep a tally here. Ideally,
 I'll also write up an essay on each book.}
+
+◊h3{Progress}
+
+◊ul{
+
+  ◊li{◊em{◊|AE|neid}: starting Book Two (page 28/327)}
+
+}
