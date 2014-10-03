@@ -30,8 +30,6 @@ as I can, starting with Virgil's ◊em{◊|AE|neid}.}
 
 ◊ul{
 
-  ◊li{◊link["https://ello.co/kisom/"]{Ello profile}}
-
   ◊li{◊link["https://github.com/kisom/"]{GitHub}}
 
   ◊li{◊link["https://twitter.com/kyleisom/"]{Twitter}}

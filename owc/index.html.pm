@@ -47,6 +47,6 @@ I'll also write up an essay on each book.}
 
 ◊ul{
 
-  ◊li{◊em{◊|AE|neid}: starting Book Two (page 28/327)}
+  ◊li{◊em{◊|AE|neid}: starting Book Seven (page 128/327)}
 
 }
