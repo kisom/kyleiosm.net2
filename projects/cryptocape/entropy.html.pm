@@ -50,7 +50,7 @@ future, ◊q{I'd} like to add a Fortuna source that reads data from the
 ATSHA204 on the cape.}
 
 ◊p{The first proof-of-concept version of this code is
-◊link["https://github.com/kisom/entropysharing"]{available on Github}.
+◊link["https://github.com/kisom/entropyshare"]{available on Github}.
 This proof of concept works, but there are some improvements
 planned:}
 

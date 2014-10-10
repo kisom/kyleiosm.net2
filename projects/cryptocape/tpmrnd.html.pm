@@ -1,0 +1,320 @@
+#lang pollen
+
+◊h2{◊code{tpmrnd}}
+
+◊p{The CryptoCape features a TPM, which includes an HWRNG. I wanted to
+mix this into my operation system's PRNG, so I wrote a simple program
+to do so. The ◊link["https://github.com/kisom/tpmrnd/"]{source} is on
+Github. It is a daemon that writes 256 bytes of random data from the
+TPM every six hours.}
+
+◊p{The program is fairly simple to use:}
+
+◊pre{
+$ tpmrnd -h
+Usage: tpmrnd [-b bytes] [-fh] [-s seconds]
+        -b bytes        Set the number of bytes to be written
+        -f              Run in the foreground
+        -h              Print this help message
+        -s seconds      Set the update delay in seconds
+}
+
+◊p{The d◊|ae|mon wakes up every minute to determine whether it should
+write another chunk of data; the delay should be minute-aligned. If
+run in the foreground, it will print to the standard output (and write
+errors to standard error). If d◊|ae|monised, it will log to syslog
+using the AUTHPRIV facility (typically in ◊code{/var/log/auth.log}).}
+
+◊p{For example, running in the foreground:}
+
+◊pre{
+$ tpmrnd -f -s 60        
+starting up
+wrote 256 byte random chunk to /dev/random
+updated at 1412923394
+^C
+}
+
+◊p{When daemonised, it writes to syslog:}
+
+◊pre{
+$ grep tpmrnd /var/log/auth.log
+Oct  9 23:47:14 ono-sendai tpmrnd: starting up
+Oct  9 23:47:14 ono-sendai tpmrnd: wrote 256 byte random chunk to /dev/random
+Oct  9 23:47:14 ono-sendai tpmrnd: updated at 1412923634
+}
+
+◊h3['style: "text-align: center"]{Source Code}
+
+◊p{The ◊link["https://github.com/kisom/tpmrnd/blob/master/tpmrnd.c"]{source code} 
+is 188 lines of code, according to
+◊link["http://cloc.sourceforge.net"]{cloc}. It is released under the
+ISC license. Here is the code as of 2014-10-09 23:49 PDT:}
+
+◊pre{
+/*
+ * Copyright (c) 2014 by Kyle Isom <kyle@tyrfingr.is>.
+ *
+ * Permission to use, copy, modify, and distribute this software for
+ * any purpose with or without fee is hereby granted, provided that
+ * the above copyright notice and this permission notice appear in
+ * all copies.
+
+ * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM
+ * DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ * ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
+ * SHALL INTERNET SOFTWARE CONSORTIUM BE LIABLE FOR ANY SPECIAL,
+ * DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
+ * RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
+ * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+ * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
+
+#include <err.h>
+#include <errno.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <syslog.h>
+#include <time.h>
+#include <unistd.h>
+#include <trousers/tss.h>
+#include <trousers/trousers.h>
+
+
+#define RETURN_FAILURE		EXIT_FAILURE
+#define RETURN_SUCCESS		EXIT_SUCCESS
+#define ERROR_OUT(msg)		if (daemonised) {\
+					syslog(LOG_ERR, msg); \
+				} else { \
+					fprintf(stderr, msg); \
+					fprintf(stderr, "\n"); \
+				}
+#define ERROR_OUT1(msg, arg)	if (daemonised) { \
+					syslog(LOG_ERR, msg, arg); \
+				} else { \
+					fprintf(stderr, msg, arg); \
+					fprintf(stderr, "\n"); \
+				}
+#define PRINT_MSG(msg)		if (daemonised) { \
+					syslog(LOG_INFO, msg); \
+				} else { \
+					printf(msg); \
+					printf("\n"); \
+				}
+#define PRINT_MSG1(msg, arg)	if (daemonised) { \
+					syslog(LOG_INFO, msg, arg); \
+				} else { \
+					printf(msg, arg); \
+					printf("\n"); \
+				}
+
+
+static time_t	update_delay = 21600; /* six hours */
+static size_t	rand_chunk = 256;
+static int	daemonised = 0;
+
+
+/*
+ * tpm_rand reads a number of random bytes from the TPM's RNG.
+ */
+static uint8_t *
+tpm_rand(size_t n)
+{
+	TSS_HCONTEXT         ctx = 0;
+	TSS_HTPM             tpm = 0;
+	TSS_RESULT           res = 0;
+	BYTE		*blob = NULL;
+	uint8_t		*data = NULL;
+
+	res = Tspi_Context_Create(&ctx);
+	if (TSS_SUCCESS != res) {
+		goto exit;
+	}
+
+	res = Tspi_Context_Connect(ctx, NULL);
+	if (TSS_SUCCESS != res) {
+		goto exit;
+	}
+
+	res = Tspi_Context_GetTpmObject(ctx, &tpm);
+	if (TSS_SUCCESS != res) {
+		goto exit;
+	}
+
+	res = Tspi_TPM_GetRandom(tpm, (UINT32)n, &blob);
+	if (TSS_SUCCESS != res) {
+		ERROR_OUT1("failed to read random data from TPM: %s",
+                    Trspi_Error_String(res))
+		goto exit;
+	}
+
+	data = calloc(n, sizeof(*data)*n);
+	if (NULL == data) {
+		res = TSS_E_OUTOFMEMORY;
+		ERROR_OUT("failed to allocate memory for random data buffer")
+		goto exit;
+	}
+
+	memcpy(data, blob, n);
+	res = TSS_SUCCESS;
+
+exit:
+	Tspi_Context_FreeMemory(ctx, NULL);
+	Tspi_Context_Close(ctx);
+	if (TSS_SUCCESS == res) {
+		return data;
+	}
+	return NULL;
+}
+
+
+/*
+ * write_rand retrieves a chunk of random data from the TPM using
+ * tpm_rand, and writes it to /dev/random.
+ */
+static int
+write_rand(void)
+{
+	int	 res = RETURN_FAILURE;
+	uint8_t	*data = NULL;
+	FILE	*devrand = NULL;
+
+	data = tpm_rand(rand_chunk);
+	if (NULL == data) {
+		goto exit;
+	}
+
+	devrand = fopen("/dev/random", "w");
+	if (NULL == devrand) {
+		ERROR_OUT("failed to open /dev/random for writing")
+		ERROR_OUT1("%s", strerror(errno))
+		goto exit;
+	}
+
+	if (rand_chunk != fwrite(data, sizeof(data[0]), rand_chunk, devrand)) {
+		ERROR_OUT("failed to write full random chunk to /dev/random")
+		goto exit;
+	}
+
+	res = RETURN_SUCCESS;
+	PRINT_MSG1("wrote %lu byte random chunk to /dev/random",
+	    (long unsigned)rand_chunk)
+
+exit:
+	free(data);
+	fclose(devrand);
+	return res;
+}
+
+
+/*
+ * run sets up a constantly running loop, waking up every minute to
+ * determine if it should write a new chunk of random data to /dev/random.
+ */
+static void
+run(void)
+{
+	time_t	current = 0;
+	time_t	next = 0;
+
+	next = time(NULL);
+
+	while (1) {
+		current = time(NULL);
+		if (current >= next) {
+			write_rand();
+			PRINT_MSG1("updated at %lu", (long unsigned)current)
+			next = current + update_delay;
+		}
+		sleep(60);
+	}
+}
+
+
+/*
+ * shutdown is the signal handler that is activated when tpmrnd runs as
+ * a daemon and the SIGUSR1 signal is received.
+ */
+static void
+shutdown(int flags)
+{
+	if (SIGUSR1 != flags) {
+		ERROR_OUT1("invalid signal received on handler: %d", flags)
+		return;
+	}
+	PRINT_MSG("shutdown signal received");
+	exit(EXIT_SUCCESS);
+}
+
+
+/*
+ * usage prints a short usage message.
+ */
+static void
+usage(const char *progname)
+{
+	fprintf(stderr,
+	    "Usage: %s [-b bytes] [-fh] [-s seconds]\n", progname);
+	fprintf(stderr,
+	    "\t-b bytes	Set the number of bytes to be written\n");
+	fprintf(stderr,
+	    "\t-f		Run in the foreground\n");
+	fprintf(stderr,
+	    "\t-h		Print this help message\n");
+	fprintf(stderr,
+	    "\t-s seconds	Set the update delay in seconds\n");
+}
+
+/*
+ * tpmrnd periodically writes randomness from the TPM to /dev/random.
+ */
+int
+main(int argc, char *argv[])
+{
+
+	int	opt;
+	int	should_daemonise = 1;
+
+	while ((opt = getopt(argc, argv, "b:fhs:")) != -1) {
+		switch (opt) {
+		case 'b':
+			rand_chunk = (size_t)strtol(optarg, NULL, 0);
+			break;
+		case 'f':
+			should_daemonise = 0;
+			break;
+		case 'h':
+			usage(argv[0]);
+			return EXIT_SUCCESS;
+		case 's':
+			update_delay = (time_t)strtol(optarg, NULL, 0);
+			break;
+		default:
+			errx(EXIT_FAILURE, "invalid commandline option");
+		}
+	}
+
+	if (should_daemonise) {
+		daemonised = 1;
+		openlog("tpmrnd", LOG_CONS, LOG_AUTHPRIV);
+		if (daemon(0, 0)) {
+			ERROR_OUT("failed to daemonise");
+			ERROR_OUT("shutting down");
+			exit(EXIT_FAILURE);
+		}
+
+		signal(SIGTTOU, SIG_IGN);
+		signal(SIGTTIN, SIG_IGN);
+		signal(SIGTSTP, SIG_IGN);
+		signal(SIGUSR1, shutdown);
+	}
+	PRINT_MSG("starting up");
+	run();
+}
+}
+
+◊p{◊small{Back to ◊link["index.html"]{CryptoCape projects}.}}
+
