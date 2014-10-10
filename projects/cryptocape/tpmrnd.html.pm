@@ -49,7 +49,8 @@ Oct  9 23:47:14 ono-sendai tpmrnd: updated at 1412923634
 ◊p{The ◊link["https://github.com/kisom/tpmrnd/blob/master/tpmrnd.c"]{source code} 
 is 188 lines of code, according to
 ◊link["http://cloc.sourceforge.net"]{cloc}. It is released under the
-ISC license. Here is the code as of 2014-10-09 23:49 PDT:}
+◊link["https://github.com/kisom/tpmrnd/blob/master/LICENSE"]{ISC license}.
+Here is the code as of 2014-10-09 23:49 PDT:}
 
 ◊pre{
 /*
