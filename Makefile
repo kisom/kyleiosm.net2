@@ -1,4 +1,4 @@
-TARGET = tyrfingr.is:/var/www/sites/kyleisom/
+TARGET = port.tyrfingr.is:site/
 
 all: build
 
