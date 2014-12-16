@@ -8,11 +8,15 @@ recently discovered the
 ◊link["http://global.oup.com/academic/content/series/o/oxford-worlds-classics-owc/"]{Oxford World's Classics collection},
 I've set about trying to read through some of these books. There's
 quite a few I've read before but would love to read again, and even
-more I've never read. The first batch of six books showed up. I
-started with Virgil's ◊em{◊|AE|neid}, and tentatively I'll be reading
-the following books in order:}
+more I've never read. The first batch of ◊strike{six}seven
+books showed up. I started with Virgil's ◊em{◊|AE|neid}, and
+tentatively I'll be reading the following books in order:}
 
 ◊ol{
+
+  ◊li{Henrik Ibsen's ◊em{Four Plays}; ◊em{Dollhouse} was the first
+  play that I read in high school that sparked an interest (along with
+  ◊em{The Canterbury Tales}).}
 
   ◊li{Stephanie Dalley's ◊em{Myths from Mesopotamia: Creation, the
   Flood, Gilgamesh, and Others}.}
@@ -47,6 +51,6 @@ I'll also write up an essay on each book.}
 
 ◊ul{
 
-  ◊li{◊em{◊|AE|neid}: starting Book Seven (page 128/327)}
+  ◊li{◊em{◊|AE|neid}: starting Book Ten (page 236/327)}
 
 }
