@@ -5,10 +5,10 @@
 `cryptutils` is a set of common Go packages for doing encryption using
 NaCl and Ed25519 keys. It also includes a set of command line tools:
 
-* secrets: command-line secrets manager
-* otpc: command-line two-factor authentication token manager
-* journal: password-backed journal
-* passcrypt: password-based file encryption
+* [secrets](/projects/cryptutils/secrets/): command-line secrets manager
+* [otpc](/projects/cryptutils/otpc/): command-line two-factor authentication token manager
+* [journal](/projects/cryptutils/journal/): password-backed journal
+* [passcrypt](/projects/cryptutils/passcrypt/): password-based file encryption
 
 The useful tools are all password-based at this time. `secrets`, `otpc`,
 and `journal` are all based on a common secret storage system. The
