@@ -6,6 +6,11 @@
 
 ◊ul{
 
+  ◊li{2014/11, ◊link["pocorgtfo06.pdf"]{Issue 0x06}: ◊em{PoC||GTFO
+  brings that OLD TIMEY EXPLOITATION with a WEIRD MACHINE JAMBOREE and
+  our world-famous FUNKY FILE FLEA MARKET not to be ironic, but
+  because WE LOVE THE MUSIC!}}
+
   ◊li{2014/08, ◊link["pocorgtfo05.pdf"]{Issue 0x05}: ◊em{PoC||GTFO;
   addressed to the inhabitants of Earth on the following and other
   interesting subjects written for the edification of all good

@@ -5,10 +5,11 @@ all: build
 .PHONY: build
 build:
 	find . -name \*.pm -exec raco pollen render '{}' \;
+	find . -name \*.pmd -exec raco pollen render '{}' \;
 
 .PHONY: install
 install:
-	rsync -auvz --exclude-from excludes . $(TARGET)
+	rsync --progress -auvz --exclude-from excludes . $(TARGET)
 
 .PHONY: deploy
 deploy: build install

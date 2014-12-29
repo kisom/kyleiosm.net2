@@ -1,1 +1,6 @@
 *.html
+*.zip
+*.tar.gz
+*.deb
+pocorgtfo/*.pdf
+*.SHA256
