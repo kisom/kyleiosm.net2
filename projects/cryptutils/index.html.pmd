@@ -19,6 +19,10 @@ of secrets (notes and TOTP/HOTP keys, respectively).
 The programs are in the `cmd/` subdirectory; each project has its own
 README.
 
+Details on the [file formats](/projects/cryptutils/format.html) and
+[cryptography](/projects/cryptutils/crypto.html) are also available to
+aid in auditing the code or building interoperable implementations
+
 ### Downloads and Source
 
 Binaries [are available](/projects/cryptutils/downloads.html) for a
