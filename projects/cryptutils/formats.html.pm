@@ -75,7 +75,7 @@ type SecretStore struct {
             "Timestamp": 1400529440,
             "Secret": "cGFzc3dvcmQ=",
             "Metadata": {
-                "email": "me@example.net"
+                "email": "bWVAZXhhbXBsZS5uZXQ="
             }
         },
         "example.org": {
