@@ -15,7 +15,7 @@
 
  }
 
-◊p{This library was borne out of a need to set up a secure channel
+◊p{This library was born out of a need to set up a secure channel
 over a TCP/IP network without the overhead of TLS. It uses NaCl for
 security, and follows the guidelines for secure channels outlined in
 ◊emph{Cryptography Engineering}.}
