@@ -36,6 +36,8 @@ as I can, starting with Virgil's ◊em{◊|AE|neid}.}
 
   ◊li{◊link["https://lobste.rs/s/d5ytoq/lobsters_interview_with_kyle"]{An interview} from a few years ago on ◊link["https://lobste.rs/"]{lobste.rs}}
 
+  ◊li{◊link["/comms.html"]{Communications and public keys} (◊link["/comms.txt"]{plaintext version})}
+
   ◊li{◊link["https://keybase.io/kisom"]{Keybase public key}}
 
   ◊li{◊link["pocorgtfo/index.html"]{PoC||GTFO}}
