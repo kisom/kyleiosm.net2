@@ -26,8 +26,9 @@ security, and follows the guidelines for secure channels outlined in
 
   ◊li{A bi-directional channel has separate keys for each direction.}
 
-  ◊li{Send and receive counters to prevent replayed messages; these
-      message counters will be reset whenever the keys change.}
+  ◊li{The channel has send and receive counters to prevent replayed
+      messages; these message counters will be reset whenever the keys
+      are rotated.}
 
   ◊li{A regressed message counter is considered a decryption failure.}
 
