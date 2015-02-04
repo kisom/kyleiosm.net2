@@ -15,13 +15,10 @@
 
  }
 
-◊p{While working on another project (building an HSM using the
-◊link["https://inverse-path.com/usbarmory/"]{usbarmory}), I realised I
-needed a secure channel overlaid on top of a TCP network. I wanted to
-avoid the overhead of doing this with TLS, so I began to think about
-how to go about doing this. I remembered the secure channel section of
-◊emph{Cryptography Engineering}, and made sure the properties of this
-software would match the properties given there.}
+◊p{This library was borne out of a need to set up a secure channel
+over a TCP/IP network without the overhead of TLS. It uses NaCl for
+security, and follows the guidelines for secure channels outlined in
+◊emph{Cryptography Engineering}.}
 
 ◊p{A secure channel has the following properties:}
 
